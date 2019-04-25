@@ -15,10 +15,13 @@ defmodule Challenge do
   def fetch do
     HTTPoison.start
     result = HTTPoison.get!("https://jsonplaceholder.typicode.com/todos/1")
-    JSON.decode(result.body) |> elem(1)    
+    JSON.decode(result.body) |> elem(1)
   end
 
   def display do
-   
-  end  
+
+    result = fetch()
+    IO.puts  "title: " <> result["title"]
+
+  end
 end
