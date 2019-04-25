@@ -14,14 +14,21 @@ defmodule Challenge do
   """
   def fetch do
     HTTPoison.start
-    result = HTTPoison.get!("https://jsonplaceholder.typicode.com/todos/1")
-    JSON.decode(result.body) |> elem(1)
+    url = "https://jsonplaceholder.typicode.com/todos/1"
+    result = case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+         body
+      {:ok, %HTTPoison.Response{status_code: 404}} ->
+        IO.puts "Not found :("
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        IO.inspect reason
+    end
+
+    JSON.decode(result) |> elem(1)
   end
 
   def display do
-
     result = fetch()
-    IO.puts  "title: " <> result["title"]
-
+    IO.puts  "TODO Title: " <> result["title"]
   end
 end
